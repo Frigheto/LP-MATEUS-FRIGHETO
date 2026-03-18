@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Frigheto | Estrategista</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #000000;
+      --dark:   #07090f;
+      --panel:  #0a0e18;
+      --border: #121a28;
+      --blue:   #0a84ff;
+      --blue2:  #3b82f6;
+      --dim:    #0a2a55;
+      --white:  #eef3ff;
+      --muted:  #4a607a;
+      --grid:   rgba(10,132,255,.1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--black);
+      font-family: 'Inter', sans-serif;
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* grid bg */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 52px 52px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* top glow */
+    .glow-top {
+      position: fixed;
+      top: -180px; left: 50%;
+      transform: translateX(-50%);
+      width: 800px; height: 400px;
+      background: radial-gradient(ellipse, rgba(10,132,255,.22) 0%, transparent 68%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 500px;
+      padding: 48px 20px 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ─────────────────────────────
+       HERO
+    ───────────────────────────── */
+    .hero {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 36px;
+    }
+
+    /* avatar */
+    .avatar-wrap {
+      position: relative;
+      width: 110px; height: 110px;
+      margin-bottom: 20px;
+    }
+
+    .avatar-wrap::before {
+      content: '';
+      position: absolute; inset: -4px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--blue) 0deg 90deg,
+        transparent 90deg 180deg,
+        var(--blue) 180deg 270deg,
+        transparent 270deg 360deg
+      );
+      animation: spin 5s linear infinite;
+    }
+
+    .avatar-wrap::after {
+      content: '';
+      position: absolute; inset: -1px;
+      border-radius: 50%;
+      background: var(--black);
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .avatar-img {
+      position: relative;
+      z-index: 1;
+      width: 110px; height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      object-position: center 18%;
+      display: block;
+    }
+
+    .live-badge {
+      position: absolute;
+      bottom: 4px; right: 4px;
+      z-index: 2;
+      background: #000;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2px 8px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #22c55e;
+    }
+
+    .live-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.15} }
+
+    .hero-name {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.6rem, 9vw, 3.4rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -.5px;
+      line-height: 1;
+      text-align: center;
+      margin-bottom: 8px;
+    }
+
+    .hero-name .dot { color: var(--blue); }
+
+    .hero-role {
+      font-size: .72rem;
+      color: var(--muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    /* pill tags */
+    .pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pill {
+      font-size: .62rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      background: rgba(255,255,255,.02);
+    }
+
+    .pill-blue {
+      border-color: rgba(10,132,255,.35);
+      color: var(--blue);
+      background: rgba(10,132,255,.06);
+    }
+
+    /* ─────────────────────────────
+       SECTION TITLE
+    ───────────────────────────── */
+    .section-head {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      margin-top: 36px;
+    }
+
+    .section-head-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, var(--dim), transparent);
+    }
+
+    .section-head-label {
+      font-size: .6rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--blue);
+    }
+
+    /* ─────────────────────────────
+       BANNER CARDS
+    ───────────────────────────── */
+    .banners {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .banner {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+      text-decoration: none;
+      color: var(--white);
+      border: 1px solid var(--border);
+      background: var(--panel);
+      min-height: 110px;
+      transition: border-color .25s, box-shadow .25s, transform .2s;
+    }
+
+    .banner:hover {
+      border-color: rgba(10,132,255,.45);
+      box-shadow: 0 0 40px rgba(10,132,255,.12), inset 0 0 60px rgba(10,132,255,.04);
+      transform: translateY(-2px);
+    }
+
+    /* left blue bar */
+    .banner::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: linear-gradient(to bottom, var(--blue), var(--dim));
+    }
+
+    /* text side */
+    .banner-text {
+      flex: 1;
+      padding: 20px 16px 20px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      z-index: 1;
+    }
+
+    .banner-tag {
+      font-size: .58rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 2px;
+    }
+
+    .banner-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .3px;
+      line-height: 1.05;
+      color: #fff;
+    }
+
+    .banner-sub {
+      font-size: .7rem;
+      color: var(--muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .banner-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 10px;
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--blue);
+      transition: gap .2s;
+    }
+
+    .banner:hover .banner-cta { gap: 8px; }
+
+    .banner-cta-arrow {
+      font-size: .9rem;
+      transition: transform .2s;
+    }
+
+    .banner:hover .banner-cta-arrow { transform: translateX(3px); }
+
+    /* visual side */
+    .banner-visual {
+      width: 160px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner-visual svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* glow behind visual */
+    .banner-visual::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(10,132,255,.12) 0%, transparent 70%);
+    }
+
+    /* ─────────────────────────────
+       FOOTER
+    ───────────────────────────── */
+    .footer {
+      margin-top: 52px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-sep {
+      width: 32px; height: 1px;
+      background: var(--dim);
+      margin-bottom: 6px;
+    }
+
+    .footer-text {
+      font-size: .6rem;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+
+<div class="glow-top"></div>
+
+<div class="page">
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="avatar-wrap">
+      <img class="avatar-img" src="public/perfil.jpeg" alt="Frigheto" />
+      <div class="live-badge">
+        <span class="live-dot"></span>
+        Online
+      </div>
+    </div>
+
+    <h1 class="hero-name">Frigheto<span class="dot">.</span></h1>
+    <p class="hero-role">Automacoes &nbsp;|&nbsp; Trafego Pago</p>
+
+    <div class="pills">
+      <span class="pill pill-blue">Automacao</span>
+      <span class="pill">Trafego Pago</span>
+      <span class="pill">CRM</span>
+    </div>
+  </div>
+
+  <!-- ── SECTION HEAD ── -->
+  <div class="section-head">
+    <div class="section-head-line"></div>
+    <span class="section-head-label">Servicos</span>
+    <div class="section-head-line" style="background:linear-gradient(270deg,var(--dim),transparent)"></div>
+  </div>
+
+  <!-- ── BANNERS ── -->
+  <div class="banners">
+
+    <!-- BANNER 1 — Tráfego Pago -->
+    <a class="banner" href="https://wa.me/555599466450" target="_blank" rel="noopener">
+      <div class="banner-text">
+        <span class="banner-tag">Trafego Pago</span>
+        <div class="banner-title">Automatize<br>seus Fluxos</div>
+        <p class="banner-sub">Campanhas que rodam sozinhas e escalam resultados</p>
+        <span class="banner-cta">Falar agora <span class="banner-cta-arrow">&#8250;</span></span>
+      </div>
+      <div class="banner-visual">
+        <!-- Dashboard de métricas de tráfego pago -->
+        <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+          <!-- BG panel -->
+          <rect width="160" height="110" fill="#060b14"/>
+          <!-- top bar -->
+          <rect x="8" y="8" width="144" height="16" rx="2" fill="#0a1525"/>
+          <text x="14" y="19" font-family="monospace" font-size="5" fill="#0a84ff" letter-spacing="0.5">ADS DASHBOARD</text>
+          <circle cx="144" cy="16" r="3" fill="#22c55e"/>
+          <!-- metric cards row -->
+          <rect x="8" y="28" width="40" height="22" rx="2" fill="#0a1525"/>
+          <text x="13" y="36" font-family="monospace" font-size="4" fill="#4a607a">ROAS</text>
+          <text x="13" y="45" font-family="monospace" font-size="7.5" fill="#0a84ff" font-weight="bold">4.8x</text>
+
+          <rect x="52" y="28" width="40" height="22" rx="2" fill="#0a1525"/>
+          <text x="57" y="36" font-family="monospace" font-size="4" fill="#4a607a">CTR</text>
+          <text x="57" y="45" font-family="monospace" font-size="7.5" fill="#fff" font-weight="bold">3.2%</text>
+
+          <rect x="96" y="28" width="40" height="22" rx="2" fill="#0a1525" stroke="#0a84ff" stroke-width=".5"/>
+          <text x="101" y="36" font-family="monospace" font-size="4" fill="#4a607a">CONV.</text>
+          <text x="101" y="45" font-family="monospace" font-size="7.5" fill="#22c55e" font-weight="bold">+127</text>
+
+          <!-- bar chart -->
+          <rect x="8" y="54" width="144" height="48" rx="2" fill="#0a1525"/>
+          <text x="13" y="62" font-family="monospace" font-size="4" fill="#4a607a">CONVERSOES / DIA</text>
+          <!-- bars -->
+          <rect x="16"  y="84" width="10" height="12" rx="1" fill="#0a2a55"/>
+          <rect x="30"  y="78" width="10" height="18" rx="1" fill="#0a2a55"/>
+          <rect x="44"  y="73" width="10" height="23" rx="1" fill="#0a84ff" opacity=".6"/>
+          <rect x="58"  y="68" width="10" height="28" rx="1" fill="#0a84ff" opacity=".7"/>
+          <rect x="72"  y="62" width="10" height="34" rx="1" fill="#0a84ff" opacity=".85"/>
+          <rect x="86"  y="56" width="10" height="40" rx="1" fill="#0a84ff"/>
+          <rect x="100" y="60" width="10" height="36" rx="1" fill="#0a84ff" opacity=".9"/>
+          <rect x="114" y="53" width="10" height="43" rx="1" fill="#3b82f6"/>
+          <rect x="128" y="49" width="10" height="47" rx="1" fill="#60a5fa"/>
+          <!-- trend line -->
+          <polyline points="21,83 35,77 49,72 63,67 77,61 91,55 105,59 119,52 133,48"
+            fill="none" stroke="#0a84ff" stroke-width="1.2" opacity=".5" stroke-dasharray="2,2"/>
+        </svg>
+      </div>
+    </a>
+
+    <!-- BANNER 2 — Automação de Atendimento -->
+    <a class="banner" href="https://wa.me/555531780004" target="_blank" rel="noopener">
+      <div class="banner-text">
+        <span class="banner-tag">Atendimento</span>
+        <div class="banner-title">Automacao<br>Inteligente</div>
+        <p class="banner-sub">Responda 24h, qualifique leads e venda enquanto dorme</p>
+        <span class="banner-cta">Falar agora <span class="banner-cta-arrow">&#8250;</span></span>
+      </div>
+      <div class="banner-visual">
+        <!-- Chat bot interface -->
+        <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+          <rect width="160" height="110" fill="#060b14"/>
+          <!-- header bar -->
+          <rect x="8" y="8" width="144" height="16" rx="2" fill="#0a1525"/>
+          <circle cx="18" cy="16" r="4" fill="#0a84ff" opacity=".3"/>
+          <circle cx="18" cy="16" r="2.5" fill="#0a84ff"/>
+          <text x="26" y="19" font-family="monospace" font-size="5" fill="#fff">Bot Ativo</text>
+          <rect x="118" y="12" width="28" height="8" rx="4" fill="#0a2a55"/>
+          <text x="122" y="18" font-family="monospace" font-size="4" fill="#22c55e">ONLINE</text>
+
+          <!-- chat bubbles -->
+          <!-- received -->
+          <rect x="10" y="28" width="80" height="14" rx="7" fill="#0a1525" stroke="#0e1828" stroke-width=".5"/>
+          <text x="16" y="37" font-family="monospace" font-size="4.5" fill="#94a3b8">Oi, quero saber mais!</text>
+
+          <!-- sent (bot) -->
+          <rect x="50" y="46" width="100" height="14" rx="7" fill="#0a2a55"/>
+          <text x="56" y="55" font-family="monospace" font-size="4.5" fill="#0a84ff">Ola! Pode me dizer...</text>
+
+          <!-- received -->
+          <rect x="10" y="64" width="64" height="14" rx="7" fill="#0a1525" stroke="#0e1828" stroke-width=".5"/>
+          <text x="16" y="73" font-family="monospace" font-size="4.5" fill="#94a3b8">Sou empresario</text>
+
+          <!-- sent (bot) -->
+          <rect x="38" y="82" width="112" height="14" rx="7" fill="#0a2a55"/>
+          <text x="44" y="91" font-family="monospace" font-size="4.5" fill="#0a84ff">Perfeito! Segue o link</text>
+
+          <!-- typing indicator -->
+          <circle cx="16" cy="104" r="2" fill="#0a84ff" opacity=".4"/>
+          <circle cx="22" cy="104" r="2" fill="#0a84ff" opacity=".6"/>
+          <circle cx="28" cy="104" r="2" fill="#0a84ff" opacity=".9"/>
+        </svg>
+      </div>
+    </a>
+
+    <!-- BANNER 3 — CRM -->
+    <a class="banner" href="https://www.zentgrowth.com/" target="_blank" rel="noopener">
+      <div class="banner-text">
+        <span class="banner-tag">Plataforma</span>
+        <div class="banner-title">Contrate<br>seu CRM</div>
+        <p class="banner-sub">Pipeline de vendas, leads e fechamentos em um lugar</p>
+        <span class="banner-cta">Acessar plataforma <span class="banner-cta-arrow">&#8250;</span></span>
+      </div>
+      <div class="banner-visual">
+        <!-- CRM Pipeline kanban -->
+        <svg viewBox="0 0 160 110" xmlns="http://www.w3.org/2000/svg">
+          <rect width="160" height="110" fill="#060b14"/>
+          <!-- header -->
+          <rect x="8" y="8" width="144" height="14" rx="2" fill="#0a1525"/>
+          <text x="13" y="18" font-family="monospace" font-size="5" fill="#0a84ff" letter-spacing=".5">CRM PIPELINE</text>
+
+          <!-- column headers -->
+          <text x="12" y="33" font-family="monospace" font-size="4" fill="#4a607a" letter-spacing=".5">LEADS</text>
+          <text x="60" y="33" font-family="monospace" font-size="4" fill="#4a607a" letter-spacing=".5">NEGOC.</text>
+          <text x="112" y="33" font-family="monospace" font-size="4" fill="#22c55e" letter-spacing=".5">FECHADO</text>
+
+          <!-- col lines -->
+          <line x1="54" y1="26" x2="54" y2="106" stroke="#0e1828" stroke-width=".5"/>
+          <line x1="106" y1="26" x2="106" y2="106" stroke="#0e1828" stroke-width=".5"/>
+
+          <!-- LEADS cards -->
+          <rect x="8"  y="36" width="44" height="16" rx="2" fill="#0a1525" stroke="#0e1828" stroke-width=".5"/>
+          <rect x="8"  y="36" width="3"  height="16" rx="1" fill="#0a84ff"/>
+          <text x="14" y="44" font-family="monospace" font-size="4" fill="#94a3b8">Lucas M.</text>
+          <text x="14" y="50" font-family="monospace" font-size="3.5" fill="#4a607a">R$ 2.500</text>
+
+          <rect x="8"  y="55" width="44" height="16" rx="2" fill="#0a1525" stroke="#0e1828" stroke-width=".5"/>
+          <rect x="8"  y="55" width="3"  height="16" rx="1" fill="#0a84ff" opacity=".6"/>
+          <text x="14" y="63" font-family="monospace" font-size="4" fill="#94a3b8">Ana C.</text>
+          <text x="14" y="69" font-family="monospace" font-size="3.5" fill="#4a607a">R$ 4.800</text>
+
+          <rect x="8"  y="74" width="44" height="16" rx="2" fill="#0a1525" stroke="#0e1828" stroke-width=".5"/>
+          <rect x="8"  y="74" width="3"  height="16" rx="1" fill="#0a84ff" opacity=".4"/>
+          <text x="14" y="82" font-family="monospace" font-size="4" fill="#94a3b8">Pedro S.</text>
+          <text x="14" y="88" font-family="monospace" font-size="3.5" fill="#4a607a">R$ 1.200</text>
+
+          <!-- NEGOC. cards -->
+          <rect x="58" y="36" width="44" height="16" rx="2" fill="#0a1525" stroke="#0e1828" stroke-width=".5"/>
+          <rect x="58" y="36" width="3"  height="16" rx="1" fill="#f59e0b"/>
+          <text x="64" y="44" font-family="monospace" font-size="4" fill="#94a3b8">Carlos R.</text>
+          <text x="64" y="50" font-family="monospace" font-size="3.5" fill="#4a607a">R$ 8.000</text>
+
+          <rect x="58" y="55" width="44" height="16" rx="2" fill="#0a1525" stroke="#0e1828" stroke-width=".5"/>
+          <rect x="58" y="55" width="3"  height="16" rx="1" fill="#f59e0b" opacity=".6"/>
+          <text x="64" y="63" font-family="monospace" font-size="4" fill="#94a3b8">Mariana L.</text>
+          <text x="64" y="69" font-family="monospace" font-size="3.5" fill="#4a607a">R$ 6.500</text>
+
+          <!-- FECHADO cards -->
+          <rect x="110" y="36" width="44" height="16" rx="2" fill="#0a1525" stroke="#0e1828" stroke-width=".5"/>
+          <rect x="110" y="36" width="3"  height="16" rx="1" fill="#22c55e"/>
+          <text x="116" y="44" font-family="monospace" font-size="4" fill="#94a3b8">Bruno T.</text>
+          <text x="116" y="50" font-family="monospace" font-size="3.5" fill="#22c55e">R$ 12.000</text>
+
+          <rect x="110" y="55" width="44" height="16" rx="2" fill="#0a1525" stroke="#22c55e" stroke-width=".5" opacity=".6"/>
+          <rect x="110" y="55" width="3"  height="16" rx="1" fill="#22c55e" opacity=".7"/>
+          <text x="116" y="63" font-family="monospace" font-size="4" fill="#94a3b8">Julia F.</text>
+          <text x="116" y="69" font-family="monospace" font-size="3.5" fill="#22c55e">R$ 9.300</text>
+
+          <!-- total bar -->
+          <rect x="8" y="95" width="144" height="12" rx="2" fill="#0a1525"/>
+          <text x="13" y="103" font-family="monospace" font-size="4" fill="#4a607a">TOTAL MES:</text>
+          <text x="70" y="103" font-family="monospace" font-size="4.5" fill="#22c55e" font-weight="bold">R$ 44.300</text>
+        </svg>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <div class="footer">
+    <div class="footer-sep"></div>
+    <span class="footer-text">Frigheto &mdash; Todos os direitos reservados</span>
+    <span class="footer-text" style="opacity:.4">2026</span>
+  </div>
+
+</div>
+
+</body>
+</html>
