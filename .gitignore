@@ -1,4 +1,20 @@
+# Agent/IDE folders
 .claude/
+.antigravity/
+.gemini/
+.cursor/
+.aios-core/
+.codex/
+.github/agents/
+
+# Environment variables
+.env
+
+# Images
+e7fe5e4c026c4fcbc7bc6f0776453247.jpg
+WhatsApp Image 2026-03-16 at 10.55.30.jpeg
+
+# Project files
 AGENTS.md
 index.html.txt
-e7fe5e4c026c4fcbc7bc6f0776453247.jpg
+
